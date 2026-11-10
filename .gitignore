@@ -1,0 +1,15 @@
+node_modules
+.output
+.tanstack
+dist
+data/
+
+# Local configuration and secrets
+.env*
+!.env.example
+
+# Local design explorations, not part of the project
+design/
+
+.DS_Store
+*.log
