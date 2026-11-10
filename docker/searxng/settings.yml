@@ -1,0 +1,61 @@
+use_default_settings: true
+
+general:
+  instance_name: remix-engine
+  enable_metrics: false
+
+search:
+  safe_search: 0
+  autocomplete: duckduckgo
+  formats: [html, json]
+
+server:
+  limiter: false # rate limiting is done by the web app
+  image_proxy: false
+  secret_key: "overridden-by-SEARXNG_SECRET"
+
+ui:
+  static_use_hash: true
+
+outgoing:
+  request_timeout: 4.0
+  max_request_timeout: 8.0
+
+engines:
+  - name: google
+    disabled: false
+  - name: bing
+    disabled: false
+  - name: duckduckgo
+    disabled: false
+  - name: brave
+    disabled: false
+  - name: baidu
+    disabled: false
+  # Additional Chinese sources with working pagination.
+  - name: 360search
+    disabled: false
+  - name: quark
+    disabled: false
+  - name: wikipedia
+    disabled: false
+  - name: github
+    disabled: false
+  - name: stackoverflow
+    disabled: false
+  - name: google images
+    disabled: false
+  - name: bing images
+    disabled: false
+  - name: google news
+    disabled: false
+  - name: bing news
+    disabled: false
+  - name: youtube
+    disabled: false
+  - name: bilibili
+    disabled: false
+  - name: arxiv
+    disabled: false
+  - name: google scholar
+    disabled: false
