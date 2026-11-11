@@ -1,0 +1,412 @@
+/* Rich results use the existing Swiss palette and leave the route's grid intact.
+   Compound selectors also hold when the base stylesheet loads after this one. */
+.media-frame {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  overflow: hidden;
+  background: var(--faint);
+}
+.media-frame > img {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  object-fit: cover;
+}
+.media-unavailable {
+  padding: 16px;
+  text-align: center;
+  color: var(--mute);
+  font: 500 0.75rem / 1.5 var(--body);
+  overflow-wrap: anywhere;
+}
+
+/* Web and news thumbnails stay alongside the result's full text. */
+.hit.media-web-hit[data-thumbnail] {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(88px, 14vw, 132px);
+  gap: 16px;
+  align-items: start;
+}
+.media-web-hit .hit-copy {
+  min-width: 0;
+}
+.media-web-hit .hit-title {
+  overflow-wrap: anywhere;
+}
+.media-web-hit .hit-host {
+  flex: 0 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.media-web-hit .web-thumb {
+  display: block;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border: 1px solid var(--hairline);
+}
+.media-web-hit .web-thumb:hover {
+  border-color: var(--red);
+}
+.media-web-hit .web-thumb .media-unavailable {
+  padding: 8px;
+  font-size: 0.65rem;
+}
+
+/* Permanent captions: title, source and resolution never depend on hover. */
+ul.images.media-images {
+  columns: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr));
+  gap: 26px 16px;
+  align-items: start;
+}
+.media-images .image.media-image {
+  min-width: 0;
+  margin: 0;
+  break-inside: auto;
+}
+.media-image .image-open {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  text-align: start;
+}
+.media-image .image-open > .media-frame {
+  aspect-ratio: 4 / 3;
+  height: auto;
+  border: 1px solid var(--hairline);
+}
+.media-image .image-open .media-frame img {
+  height: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: contain;
+}
+.media-image .image-title {
+  display: block;
+  margin-top: 10px;
+  font: 700 0.95rem / 1.4 var(--display);
+  overflow-wrap: anywhere;
+}
+.media-image .image-open:hover .image-title {
+  color: var(--red);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.media-image .image-open:hover > .media-frame {
+  border-color: var(--red);
+}
+.media-image .image-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 12px;
+  margin-top: 5px;
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+.media-image a.image-source {
+  display: inline;
+  position: static;
+  min-height: 0;
+  max-width: 100%;
+  background: transparent;
+  color: var(--red);
+  overflow-wrap: anywhere;
+}
+.media-image a.image-source:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.media-image .image-resolution {
+  color: var(--mute);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+/* Native dialog supplies focus containment, Escape and top-layer placement. */
+dialog.media-preview {
+  position: fixed;
+  inset: 0;
+  width: min(1120px, calc(100vw - 32px));
+  max-width: calc(100vw - 32px);
+  max-height: calc(100dvh - 32px);
+  margin: auto;
+  padding: 0;
+  border: 2px solid var(--rule);
+  background: var(--bg);
+  color: var(--fg);
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.rbody > dialog.media-preview {
+  margin: auto;
+}
+dialog.media-preview::backdrop {
+  background: rgb(0 0 0 / 0.78);
+}
+.media-preview .preview-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 12px 8px 20px;
+  border-bottom: 1px solid var(--hairline);
+  background: var(--bg);
+}
+.media-preview .preview-close {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: 400 2rem / 1 var(--body);
+}
+.media-preview .preview-close:hover {
+  background: var(--fg);
+  color: var(--on-fg);
+}
+.media-preview .preview-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr);
+}
+.media-preview .preview-image {
+  display: grid;
+  min-width: 0;
+  min-height: 320px;
+  background: var(--faint);
+}
+.media-preview .preview-image .media-frame {
+  min-height: 320px;
+  padding: 16px;
+}
+.media-preview .preview-image img {
+  width: 100%;
+  height: min(65dvh, 720px);
+  object-fit: contain;
+}
+.media-preview .preview-detail {
+  min-width: 0;
+  padding: clamp(20px, 3vw, 32px);
+  border-left: 1px solid var(--hairline);
+}
+.media-preview .preview-source {
+  color: var(--red);
+  font: 700 0.75rem / 1.5 var(--display);
+  letter-spacing: 0.04em;
+  overflow-wrap: anywhere;
+}
+.media-preview .preview-title {
+  margin: 12px 0 0;
+  font: 800 clamp(1.3rem, 2.5vw, 1.9rem) / 1.2 var(--display);
+  letter-spacing: -0.025em;
+  overflow-wrap: anywhere;
+}
+.media-preview .preview-resolution {
+  margin-top: 10px;
+  color: var(--mute);
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.media-preview .preview-description {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--hairline);
+  color: var(--mute);
+  font-size: 0.95rem;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+.media-preview .preview-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 12px;
+  margin-top: 24px;
+}
+.media-preview .preview-visit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  min-height: 44px;
+  max-width: 100%;
+  padding: 10px 16px;
+  background: var(--fg);
+  color: var(--on-fg);
+  font: 700 0.85rem / 1.5 var(--display);
+  overflow-wrap: anywhere;
+}
+.media-preview .preview-visit:hover {
+  background: var(--red);
+  color: #fff;
+}
+.media-preview .preview-original {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding-block: 6px;
+  font-size: 0.8rem;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  overflow-wrap: anywhere;
+}
+.media-preview .preview-original:hover {
+  color: var(--red);
+}
+
+/* Video cards retain natural document order and readable metadata. */
+ul.videos.media-videos {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 270px), 1fr));
+  gap: 32px 24px;
+}
+.media-videos .media-video {
+  min-width: 0;
+}
+.media-video a.video-link {
+  gap: 12px;
+}
+.media-video .video-thumb {
+  display: block;
+  position: relative;
+  border: 1px solid var(--hairline);
+}
+.media-video .video-thumb .media-frame {
+  position: absolute;
+  inset: 0;
+}
+.media-video .video-play {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  transform: translate(-50%, -50%);
+  border: 1px solid rgb(255 255 255 / 0.7);
+  background: rgb(0 0 0 / 0.72);
+  color: #fff;
+  font-size: 1rem;
+  padding-left: 3px;
+}
+.media-video .media-frame[data-unavailable] .media-unavailable {
+  align-self: end;
+  padding-bottom: 10px;
+}
+.media-video .video-duration {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  max-width: calc(100% - 16px);
+  padding: 3px 6px;
+  background: #0a0a0a;
+  color: #fff;
+  font: 600 0.75rem / 1.4 var(--body);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.media-video .video-title {
+  font: 800 1.05rem / 1.4 var(--display);
+  overflow-wrap: anywhere;
+}
+.media-video .video-link:hover .video-thumb {
+  border-color: var(--red);
+}
+.media-video .video-link:hover .video-play {
+  background: var(--red);
+}
+.media-video .video-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+  margin-top: 8px;
+  color: var(--mute);
+  font-size: 0.75rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.media-video .video-source {
+  color: var(--red);
+  font-weight: 600;
+}
+.media-video .video-snippet {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  overflow: hidden;
+  margin-top: 8px;
+  color: var(--mute);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.media-knowledge .knowledge-image {
+  margin-top: 12px;
+  height: 14rem;
+}
+.media-knowledge .knowledge-image img {
+  object-fit: contain;
+}
+.media-knowledge .kp-title,
+.media-knowledge .kp-body,
+.media-knowledge .kp-attrs,
+.media-knowledge .kp-links {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.media-knowledge .kp-attrs {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+}
+
+@media (max-width: 44rem) {
+  .media-preview .preview-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .media-preview .preview-image,
+  .media-preview .preview-image .media-frame {
+    min-height: 180px;
+  }
+  .media-preview .preview-image img {
+    height: min(42dvh, 380px);
+  }
+  .media-preview .preview-detail {
+    border-left: 0;
+    border-top: 1px solid var(--hairline);
+  }
+}
+
+@media (max-width: 32rem) {
+  .hit.media-web-hit[data-thumbnail] {
+    grid-template-columns: minmax(0, 1fr) 88px;
+    gap: 12px;
+  }
+  ul.images.media-images {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px 12px;
+  }
+  .media-image .image-title {
+    font-size: 0.85rem;
+  }
+  .media-image .image-meta {
+    font-size: 0.7rem;
+  }
+  ul.videos.media-videos {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
