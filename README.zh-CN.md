@@ -93,6 +93,7 @@ PORT=3000 pnpm start
 
 ## 部署说明
 
+- 仓库提供 `Dockerfile`，`docker/docker-compose.prod.yml` 会把应用和它自己的 SearXNG 一起运行。设置 `ADMIN_PASSWORD` 和 `SEARXNG_SECRET`，让反向代理指向 `web` 服务的 3000 端口。配置和密钥保存在 `web-data` 卷里。
 - 应用以单个 Node 进程运行，配置写入、缓存和限流都在进程内。不要让多个实例共用同一个 `DATA_DIR`。
 - 请放在负责 HTTPS 并设置 `X-Forwarded-For` 的反向代理之后。限流按该请求头中的客户端 IP 计数。
 - 记得备份 `DATA_DIR`。

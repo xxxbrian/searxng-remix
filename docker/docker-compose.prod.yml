@@ -1,0 +1,34 @@
+# Production stack: the web app plus its own SearXNG, neither published on a host port.
+# Put a reverse proxy (Traefik, Caddy, nginx) in front of `web` on port 3000.
+#
+# Required: ADMIN_PASSWORD (12+ characters) and SEARXNG_SECRET.
+# Optional: AI_API_KEY, AI_BASE_URL, AI_MODEL, JEV_API_KEY. Other settings live in /admin.
+services:
+  web:
+    build:
+      context: ..
+    restart: unless-stopped
+    depends_on:
+      - searxng
+    environment:
+      SEARXNG_URL: http://searxng:8080
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?set ADMIN_PASSWORD}
+      AI_API_KEY: ${AI_API_KEY:-}
+      AI_BASE_URL: ${AI_BASE_URL:-https://api.openai.com/v1}
+      AI_MODEL: ${AI_MODEL:-}
+      JEV_API_KEY: ${JEV_API_KEY:-}
+    volumes:
+      - web-data:/data
+    expose:
+      - "3000"
+
+  searxng:
+    image: searxng/searxng:latest
+    restart: unless-stopped
+    environment:
+      SEARXNG_SECRET: ${SEARXNG_SECRET:?set SEARXNG_SECRET}
+    volumes:
+      - ./searxng/settings.yml:/etc/searxng/settings.yml:ro
+
+volumes:
+  web-data:

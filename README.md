@@ -93,6 +93,7 @@ Restrict access to this directory and to its backups.
 
 ## Deployment notes
 
+- `Dockerfile` builds the app, and `docker/docker-compose.prod.yml` runs it together with its own SearXNG. Set `ADMIN_PASSWORD` and `SEARXNG_SECRET`, and point your reverse proxy at port 3000 of the `web` service. Settings and keys live in the `web-data` volume.
 - The app runs as a single Node process: settings writes, caches and rate limits are kept in that process. Do not run several copies against the same `DATA_DIR`.
 - Put it behind a reverse proxy that terminates HTTPS and sets `X-Forwarded-For`. Rate limits are counted per client IP taken from that header.
 - Back up `DATA_DIR`.
