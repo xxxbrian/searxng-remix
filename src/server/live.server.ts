@@ -12,7 +12,8 @@ import { recordUsage } from './usage.server'
 const GEOCODE_URL = 'https://geocoding-api.open-meteo.com/v1/search'
 const NOMINATIM_URL = 'https://nominatim.openstreetmap.org/search'
 const FORECAST_URL = 'https://api.open-meteo.com/v1/forecast'
-const TIMEOUT_MS = 4000
+const TIMEOUT_MS = 6000
+const ATTEMPTS = 2
 /** Nominatim's usage policy: identify the application, at most one request per second. */
 const USER_AGENT = 'remix-search/1.0 (self-hosted SearXNG front end)'
 const NOMINATIM_SPACING_MS = 1100
@@ -95,10 +96,21 @@ function toPlace(result: GeoResult): Place {
   }
 }
 
+/**
+ * The upstreams are far from many servers (a fresh TLS connection can take a
+ * second), so a slow moment is retried once before the card gives up.
+ */
 async function fetchJson(url: URL, headers?: Record<string, string>): Promise<unknown> {
-  const response = await fetch(url, { headers, signal: AbortSignal.timeout(TIMEOUT_MS) })
-  if (!response.ok) throw new Error(`Open-Meteo responded ${response.status}`)
-  return response.json()
+  for (let attempt = 1; ; attempt++) {
+    try {
+      const response = await fetch(url, { headers, signal: AbortSignal.timeout(TIMEOUT_MS) })
+      if (!response.ok) throw new Error(`HTTP ${response.status}`)
+      return await response.json()
+    } catch (error) {
+      const transient = error instanceof Error && (error.name === 'TimeoutError' || error.name === 'TypeError')
+      if (!transient || attempt >= ATTEMPTS) throw error
+    }
+  }
 }
 
 async function openMeteoPlace(name: string, language: string, strict: boolean): Promise<Place | null> {
@@ -266,7 +278,12 @@ export async function liveCard(
       query,
       ms: performance.now() - started,
       ok: false,
-      error: error instanceof Error ? error.message : String(error),
+      error:
+        error instanceof Error && error.name === 'TimeoutError'
+          ? 'timeout'
+          : error instanceof Error
+            ? error.message
+            : String(error),
       detail: { card: kind },
     })
     return null

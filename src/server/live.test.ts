@@ -156,4 +156,34 @@ describe('live cards', () => {
     expect(await liveCard('上海天气', 'weather', defaultSettings(), 'zh-CN', 'zh-CN')).toBeNull()
     expect(mocks.usage.at(-1)).toMatchObject({ kind: 'live', ok: false })
   })
+
+  it('retries once after a timeout, then reports the timeout as a code', async () => {
+    const timeout = () => new DOMException('The operation was aborted due to timeout', 'TimeoutError')
+    let slow = true
+    request.mockImplementation(async input => {
+      if (slow) {
+        slow = false
+        throw timeout()
+      }
+      return String(input).includes('geocoding') ? geo([london]) : Response.json(forecast)
+    })
+    const { liveCard } = await import('./live.server')
+    expect(await liveCard('London weather', 'weather', defaultSettings(), 'en', 'en-GB')).toMatchObject({
+      kind: 'weather',
+    })
+    expect(request).toHaveBeenCalledTimes(3)
+
+    request.mockReset()
+    request.mockRejectedValue(timeout())
+    expect(await liveCard('Paris weather', 'weather', defaultSettings(), 'en', 'en-GB')).toBeNull()
+    expect(request).toHaveBeenCalledTimes(2)
+    expect(mocks.usage.at(-1)).toMatchObject({ kind: 'live', ok: false, error: 'timeout' })
+  })
+
+  it('does not retry an HTTP error', async () => {
+    request.mockResolvedValue(new Response(null, { status: 503 }))
+    const { liveCard } = await import('./live.server')
+    await liveCard('Berlin weather', 'weather', defaultSettings(), 'en', 'en')
+    expect(request).toHaveBeenCalledTimes(1)
+  })
 })
