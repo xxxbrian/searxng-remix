@@ -915,6 +915,26 @@ kbd {
    ========================================================================== */
 
 @media (max-width: 62rem) {
+  /* Tighter vertical rhythm: the header, tools and first card sit closer together. */
+  .tools {
+    padding-top: 2px;
+  }
+  .rbody {
+    padding-block: 4px 40px;
+  }
+  .rbody > * {
+    margin-bottom: 20px;
+  }
+  .meta,
+  .correction {
+    margin-bottom: 8px;
+  }
+  /* The red rule above the AI summary costs a line of screen for no information. */
+  .ai {
+    border-top: 0;
+    padding-top: 0;
+  }
+
   /* The summary precedes the result list on smaller screens. */
   .rbody {
     grid-template-columns: minmax(0, 1fr);
@@ -980,6 +1000,7 @@ kbd {
   .hit-title {
     font-size: 1.1rem;
   }
+
   .images {
     columns: 2;
   }
