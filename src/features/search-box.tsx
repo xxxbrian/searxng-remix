@@ -149,8 +149,12 @@ export function SearchBox(props: SearchBoxProps) {
             </svg>
           </button>
         </Show>
-        <button type="submit" class="sbox-submit">
-          {i18n.t('search')}
+        <button type="submit" class="sbox-submit" aria-label={i18n.t('search')}>
+          <span class="sbox-submit-label">{i18n.t('search')}</span>
+          <svg class="sbox-submit-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="11" cy="11" r="7" />
+            <path d="m20 20-3.5-3.5" />
+          </svg>
         </button>
       </form>
 

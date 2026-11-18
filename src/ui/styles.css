@@ -164,6 +164,7 @@ kbd {
   position: relative;
   display: block;
   width: 100%;
+  min-width: 0; /* a flex item must be able to shrink below its content, or the page scrolls sideways */
   max-width: 40rem;
 }
 .sbox-field {
@@ -227,6 +228,15 @@ kbd {
 .sbox-submit:hover {
   background: var(--red);
   color: #fff;
+}
+.sbox-submit-icon {
+  display: none;
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: square;
 }
 
 .sbox-list {
@@ -938,8 +948,27 @@ kbd {
   .rh-logo {
     font-size: 1.6rem;
   }
+  /* The submit becomes a square icon that mirrors the logo on the other side. */
+  .sbox-icon {
+    display: none;
+  }
+  .sbox-field {
+    padding-left: 6px;
+  }
   .sbox-submit {
-    display: none; /* Enter on the soft keyboard submits */
+    display: grid;
+    place-items: center;
+    width: var(--tap);
+    padding: 0;
+  }
+  .sbox-submit-label {
+    display: none;
+  }
+  .sbox-submit-icon {
+    display: block;
+  }
+  .sbox-hero .sbox-submit {
+    width: 56px;
   }
   .sbox-input {
     font-size: 1rem; /* 16px+ stops iOS zooming on focus */
