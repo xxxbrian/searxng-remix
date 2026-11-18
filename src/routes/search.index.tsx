@@ -62,15 +62,6 @@ function SearchResults() {
 
   return (
     <main class="rbody" aria-label={i18n.t('results')}>
-      <p class="meta">
-        {i18n.t('resultMeta', {
-          page: data().page,
-          seconds: (data().elapsedMs / 1000).toLocaleString(i18n.locale, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          }),
-        })}
-      </p>
       <Show when={data().correction}>
         {fixed => (
           <p class="correction">
@@ -163,6 +154,15 @@ function SearchResults() {
       <Show when={data().hits.length > 0 || data().page > 1}>
         <Pager page={data().page} hasNext={data().hits.length > 0} />
       </Show>
+      <p class="meta">
+        {i18n.t('resultMeta', {
+          page: data().page,
+          seconds: (data().elapsedMs / 1000).toLocaleString(i18n.locale, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }),
+        })}
+      </p>
     </main>
   )
 }

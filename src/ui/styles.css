@@ -429,13 +429,13 @@ kbd {
   display: grid;
   grid-template-columns: minmax(0, var(--main)) minmax(0, var(--side));
   grid-template-areas:
-    "meta rail"
     "correction rail"
     "live rail"
     "answer rail"
     "results rail"
     "related rail"
-    "pager rail";
+    "pager rail"
+    "meta rail";
   column-gap: clamp(32px, 5vw, 64px);
   align-items: start;
   padding-block: 20px 56px;
@@ -938,7 +938,7 @@ kbd {
   /* The summary precedes the result list on smaller screens. */
   .rbody {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: "meta" "correction" "live" "answer" "rail" "results" "related" "pager";
+    grid-template-areas: "correction" "live" "answer" "rail" "results" "related" "pager" "meta";
   }
   .result-rail .ai-response:not([data-expanded]) .ai-text {
     display: -webkit-box;
